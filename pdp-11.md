@@ -84,8 +84,8 @@ will be of any relevance). This contains the information on the PDP-11/40.
 ![PSW Diagram](./img/psw.jpg)
 
 #### Modes
-Bits 15 and 14 are the current mode. Bits 13 and 12 represent the previous
-modes, and bits 11 through 8 represent the User/Kernel bits.
+Bits 15 and 14 are the current mode (either user or kernel mode). Bits 13 and
+12 represent the previous modes, and bits 11 through 8 aren't used (maybe).
 
 #### Processor Priority
 
