@@ -123,11 +123,25 @@ specified by the PDP-11 ISA (Instruction Set Architecture). These include
 
 In the PDP-11, any of the GPR can be used as a stack pointer.
 
+GPR may be used with an instruction in any of the follow ways:
++ Accumlators: data the be manipulated will stay within register
++ Pointers: The contents of the register are the address of the operand rather
+  than the operand itself
++ Auto pointers: pointers that can step forward or backward in core locations.
+  This is also known as autoincrement addressing (forward) and autodecrement
+  addressing (backward) and are extremely useful for going through tabular data
+  (sequential data in memory)
++ Index registers: contents of the register and the word following the
+  instruction are summed to produce the address of the operand.
+  (`.begin()+5` maybe?)
+
 ### Single Operand Addressing
 Examples of a single operand instruction is `CLR`, `INC`, and `TST`. (Clear,
 Increment, Test).
 
-Remember the 16-bit word size from above.
+![Single Addressing](./img/singleadd.jpg)
+
+The 16-bit word size from above.
 + Bits 15 through 6 specify the op-code (operation code). The op-code defined
   the type of instruction to be executed.
 + Bits 5 throuh 0 form a six-bit field. This is called the destination address
@@ -143,8 +157,10 @@ Remember the 16-bit word size from above.
 These are operations which imply **two operands** and are handled by
 instructions that specify two addresses.
 
+![Double Addressing](./img/doubleadd.jpg)
+
 **Two Operands:**
-1.Source Operand
+1. Source Operand
 2. Destination Operand
 
 The insturction format for the double operand instruction is:
@@ -156,3 +172,24 @@ The insturction format for the double operand instruction is:
   the example of `ADD A, B` which means add the contents of the sources A to
   the contents of B. A will be unchanged after the execution, but register B
   will contain the the addition and contents of A.
+
+## Direct Addressing
+
+There are four basic modes with direct addressing
+
+```
+Mode   Name              Assember Syntax        Function
+ 0     Register              Rn                 Register contains operand
+
+ 2     Autoincrement        (Rn)+               Register is used as a pointer
+                                                to sequential data, then is
+                                                incremented
+
+ 4     Autodecrement       -(Rn)                Register is decremented and
+                                                then used as a pointer
+
+ 6     Index               X(Rn)                Value X is added to (Rn) to
+                                                produce an address of an
+                                                operand. Neither X nor (Rn) are
+                                                modified
+```
