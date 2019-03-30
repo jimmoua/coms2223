@@ -76,6 +76,45 @@ To convert a negative decimal number to 10-bit 2's:
 3. "Flip" the bits.
 4. Add 1 to the binary value after flipping the bits.
 
+## Processor Status Word
+
+The Processor Status Word (PSW) is located at location 777776 (not that that
+will be of any relevance). This contains the information on the PDP-11/40.
+
+![PSW Diagram](./img/psw.jpg)
+
+#### Modes
+Bits 15 and 14 are the current mode. Bits 13 and 12 represent the previous
+modes, and bits 11 through 8 represent the User/Kernel bits.
+
+#### Processor Priority
+
+Bits 7 through 5 are the processor priority bits. If the CPU operates at a high
+priority level, external devices are not allowed to interrupt it with service
+requests. The higher the bit that the CPU is working on, the harder it is to
+require service. Therefore, operating at lower bits will likely allow for
+interrupts.
+
+#### Conditional Codes
+
+The conditional codes are labeled as such:
+**N  Z  V  C**
+
+```
+N - 1 if last result was negative
+
+Z - 1 if the result was zero.
+
+V - 1 if generated a 2's complement overflow
+
+C - 1 if had to carry from the MSB
+```
+
+### Trap Bit
+
+The trap bit (T) when set will load a new PSW. This bit is useful for debugging
+programs because you can install breakpoints with it.
+
 ## PDP-11 Addressing Modes
 
 Data stored in memory must be access and manipulated. Handling data is
