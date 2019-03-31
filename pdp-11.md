@@ -397,7 +397,7 @@ Mode  Name                 Assembler Syntax      Function
 
 ### PC as GPR (Absolute Addressing)
 
-`CLR @#1000` will clear the contents at memory location 1000.
+`CLR @#1100` will clear the contents at memory location 1100.
 
 ![immediateAbs](./img/pcAbsolute.jpg)
 
@@ -424,3 +424,91 @@ use it as the address of the operand.
 2. For some reason, PC is unchanged?
 
 ![ImmediateRelativeDeferred](./img/immediateDeferred.jpg)
+
+## Instruction Formats
+
+Taken directly from the manual
+
+![InstructionFormats](./img/instructionFormats.jpg)
+
+## Byte Instructions
+
+The MSB (bit 15) of the instruction word is set to indicate a byte instruction
+(not word instruction).
+
+![ByteInstructionsTable](./img/byteInstructionsTable.jpg)
+
+For example, let's a look at `CLR`.
+
+```
+CLR
+0050DD                    ; Octal code
+000 000 101 000 DDD DDD   ; Representation in binary
+```
+
+And, if mentioned above, we wanted to preform a byte instruction, we would
+simple modify the MSB (bit 15)
+
+```
+CLRB
+0050DD                    ; Octal code
+
+0 000 101 000 xxx xxx
+
+001 000 101 000 DDD DDD   ; Representation in binary (MSB is set)
+```
+
+Let's analyze the word instruction from Week05.md
+
+```
+Octal Code: 010514       ; Notice how the MSB for the octal is 0
+                         ; This means when translated to binary, MSB is also
+                         ; zero there this is going to be a word instruction
+010514
+000 001 000 101 001 100  ; We never actually use the first 2-bits, because we
+                         ; are only limited to 15-bits
+
+0 001 000 101 001 100    ; We can just remove the first two bits and make it
+                         ; 15-bits (remember the MSB here indicated if it's a
+                         ; word instruction or a byte instruction)
+
+      SSS SSS DDD DDD    ; First two sets of bits are the source and the second
+0 001 000 101 001 100    ; set of bits are the destination.
+                         ; In this case, we are moving 101 (R5) to 100 (R4)
+                         ; And since the indirection bit for the destination
+                         ; field is 001, we will post autoincrement.
+
+start:
+  mov #100,r5
+  mov r5,(r4)+           ; Can you guess what value the operand is in r4?
+                         ; Where did we move r5 to?
+.end start
+```
+
+### List of Common Instructions
+
+You can get more from the manual
+
+```
+Let x represent 0/1 with 0 = word instruction
+                         1 = byte instruction
+    r represent register
+
+OP CODE     SYNTAX      DESCRIPTION                TYPE
+
+x1SSDD      MOV(B)      Move SS to DD              Double Operand
+x2SSDD      CMP(B)      Compare SS to DD           Double Operand
+x3SSDD      BIT(B)      Bit test                   Double Operand
+x4SSDD      BIC(B)      Bit clear                  Double Operand
+x5SSDD      BIS(B)      Bit set                    Double Operand
+06SSDD      ADD         Add from SS to DD
+16SSDD      SUB         Subtract SS from DD
+
+
+x050DD      CLR(B)      Clear contents of DD       Single Operand
+x051DD      COM(B)      Complement DD              Single Operand
+x052DD      INC(B)      Increment contents of DD   Single Operand
+x053DD      DEC(B)      Decrement contents of DD   Single Operand
+x054DD      NEG(B)      Negate contents of DD      Single Operand
+x057DD      TST(B)      Test DD                    Single Operand
+```
