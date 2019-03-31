@@ -152,6 +152,14 @@ The 16-bit word size from above.
      (address-mode). **Bit 3 indicated direct or indirect addressing**.
      (Indirect addressing is also known as deferred addressing).
 
+#### High and Low Byte
+
+The PDP-11 word is divided into a high byte and a low byte.
+
+![How and Low Byte] (./img/highNlowbyte.jpg)
++ Low bytes are stored at **even-numbered** memory locations
++ High bytes are stored at **odd-numbered** memory locations
+
 ### Double Operand Addressing
 
 These are operations which imply **two operands** and are handled by
@@ -192,4 +200,68 @@ Mode   Name              Assember Syntax        Function
                                                 produce an address of an
                                                 operand. Neither X nor (Rn) are
                                                 modified
+```
+
+### Register Mode
+
+With this mode, any of the GPR may be used as simple accumulators. The operand
+is contained in the selected register. Since they are hardware register, the
+GPRs that use this mode will operate at high speeds. Assember syntax requires
+that a general register be defined as follows (% sign indicated register
+definition):
+
+```
+R0 = %0
+R1 = %1
+R2 = %2
+...
+```
+
+#### Register Mode Examples
+```
+INC   R3       ; Add one to the contents of the general register 3
+ADD   R2,R4    ; Add contents of R2 to R4, but do not change R2
+COMB  R4       ; Complement byte of R4 (idk how this works)
+```
+
+### Auto Increment Mode
+
+This mode provides automatic stepping of a pointer through sequential data
+(tabular data). It assumes the contects of the GPR to be the address of the
+operand. Contents of registers are stepped by one byte for byte instructions
+and two bytes for word instructions to address the next sequential data. It's
+powerful use especially for array processing and stacks.
+
+```
+CLR(R5)+       ; Use contents of R5 as address of operand. Clear selected
+               ; operand and then increment contents of R5 by two.
+
+CLR(R5)+       ; Use contents of R5 as address of operand. Clear selected byte
+               ; operand and then increment contents of R5 by one.
+```
+
+### Auto Decrement Mode
+
+Mode is useful for processing data in a list in the reverse direction. Contents
+of the selected general register are decremented by two for word instructions
+and one for byte instructions and THEN they are used for the address of the
+operand.
+
+```
+INC  -(R0)    ; Decrease the value in R0 by two and then use it as the address
+              ; of the operand. Then increase the operand by 1.
+
+INCB -(R0)    ; Decrease the value in R0 by one and then use it as the address
+              ; of the operand. Then increase the operand byte by 1.
+```
+
+### Index Mode
+
+In this mode, the contents of the selected general register and an index word
+following the instruction word are summed to form the address of the operand.
+From above, where X is the indexed word and Rn is the selected register.
+
+```
+CLR  200(R4)   ; Add 200 with contents of R4 and use that as the address of the
+               ; operand. Clear the contents of that address.
 ```
