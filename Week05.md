@@ -37,7 +37,7 @@ There are two documents that you will have to write:
   its size.
 
 ### Machine Language vs Assembly Lanuage
-These are somewhat the same thing? They are not. Machine machine is binary. We
+These are somewhat the same thing? They are not. Machine language is binary. We
 will express machine language in octal or hexadecimal. For assembly language,
 it is a textual form of instructions. There are a total of 7 different
 instructions. These instructions are turned into four bit patterns which are
@@ -52,9 +52,10 @@ Assembly language programs are just a bunch of line with the following forms:
 [label] [op-code] [operands] [comment field]
 ```
 
-If no label, there is at least 1 space in the label field. The operands usually
-respond in what is appropriate for the op-code. The comment field usually has
-some special character for it (for x86 ASM, it's a semicolon).
+If no label, there is at least 1 space in the label field. The operands
+(something that can be manipulated) usually respond in what is appropriate for
+the op-code. The comment field usually has some special character for it (for
+x86 ASM, it's a semicolon).
 
 
 ### Pseudo-Operations
@@ -118,8 +119,12 @@ The right part of the word: the last three bits (register number) and the right
 last are the indirection bits.
 
 + Registeres R0-R5 are the GPR (General Purpose Registers)
-+ Register R6 is the Stack pointer
-+ Register R7 is the PC (program counter)
+  + These can be used for a variet of purposes. These registers can be used as
+    accumulators, index registers, auto increment/decrement registers, or as
+    stack point pointers.
++ Register R6 is the Stack Pointer (or Kernel Stack Pointer in the manual)
++ Register R7 is the PC (program counter which contains address of next
+  instruction to be executed)
 
 Bits left of indirection bit:
 
