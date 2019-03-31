@@ -237,7 +237,7 @@ powerful use especially for array processing and stacks.
 CLR(R5)+       ; Use contents of R5 as address of operand. Clear selected
                ; operand and then increment contents of R5 by two.
 
-CLR(R5)+       ; Use contents of R5 as address of operand. Clear selected byte
+CLRB(R5)+      ; Use contents of R5 as address of operand. Clear selected byte
                ; operand and then increment contents of R5 by one.
 ```
 
@@ -400,3 +400,27 @@ Mode  Name                 Assembler Syntax      Function
 `CLR @#1000` will clear the contents at memory location 1000.
 
 ![immediateAbs](./img/pcAbsolute.jpg)
+
+### PC as GPR (Relative Addressing)
+
+This mode is assembled as index mode using the PC register (R7). The base of
+the address, which stored in the second or third word of the instruction, is
+added to the PC and then becomes the address of the operand. When the
+instruction are to be relocated, the operand is moved by the same amount.
+Basically, we look at the current PC and add it's adjacant contents to it and
+use it as the address of the operand.
+
+![immediateRelative](./img/immediateRela.jpg)
+
+1. The current PC is at 005267
+2. The grab the contents of the of PC+2 and add the contents of that to the
+   address of address next to PC+2 (essentially just something like PC+2 +2)
+3. The PC is increased by 2
+
+### PC as GPR (Relative Deferred Addressing)
+
+1. It's almost the same steps as above, but with the similar idea of pointer to
+   pointer.
+2. For some reason, PC is unchanged?
+
+![ImmediateRelativeDeferred](./img/immediateDeferred.jpg)
