@@ -340,7 +340,7 @@ be the value we increment.
 
 Let's consider `COM @-(R0)`, which means
 + Use the contents of the R0 as the address operand and go to it
-+ Once there, use the content of R0's content minus 21 as the next address
++ Once there, use the content of R0's content minus 2 as the next address
   operand
 + Now we get to address that address, complement it as follows
 
