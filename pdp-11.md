@@ -157,6 +157,7 @@ The 16-bit word size from above.
 The PDP-11 word is divided into a high byte and a low byte.
 
 ![How and Low Byte] (./img/highNlowbyte.jpg)
+
 + Low bytes are stored at **even-numbered** memory locations
 + High bytes are stored at **odd-numbered** memory locations
 
