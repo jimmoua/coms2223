@@ -266,3 +266,36 @@ From above, where X is the indexed word and Rn is the selected register.
 CLR  200(R4)   ; Add 200 with contents of R4 and use that as the address of the
                ; operand. Clear the contents of that address.
 ```
+
+## Indirect Addressing
+
+This is also known as **deferred addressing**. There are four basic modes with
+this type of addressing.
+
+```
+Mode   Name                     Assember Syntax     Function
+ 1     Register Deferred        @Rn or (Rn)         Register contains the
+                                                    address of the operand
+
+ 2     Autoincrement Deferred   @(Rn)               Register is first used as a
+                                                    pointer to a word container
+                                                    the address of the operand,
+                                                    then incremented by 2, even
+                                                    for byte instructions
+
+ 3     Autodecrement Deferred   @-(Rn)              Register is decremented by
+                                                    two even for byte
+                                                    instructions and then used
+                                                    as a pointer to a word
+                                                    containing the address of
+                                                    the operand.
+
+ 4     Index Deferred           @X(Rn)              Value X (stored in a word
+                                                    followin the instruction)
+                                                    and (Rn) are added. The usm
+                                                    is then used as a pointer
+                                                    to a word container the
+                                                    address of the operand.
+                                                    Neither X nor (Rn) are
+                                                    modified.
+```
