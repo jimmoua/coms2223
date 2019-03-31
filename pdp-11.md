@@ -277,20 +277,20 @@ Mode   Name                     Assember Syntax     Function
  1     Register Deferred        @Rn or (Rn)         Register contains the
                                                     address of the operand
 
- 2     Autoincrement Deferred   @(Rn)+              Register is first used as a
+ 3     Autoincrement Deferred   @(Rn)+              Register is first used as a
                                                     pointer to a word container
                                                     the address of the operand,
                                                     then incremented by 2, even
                                                     for byte instructions
 
- 3     Autodecrement Deferred   @-(Rn)              Register is decremented by
+ 5     Autodecrement Deferred   @-(Rn)              Register is decremented by
                                                     two even for byte
                                                     instructions and then used
                                                     as a pointer to a word
                                                     containing the address of
                                                     the operand.
 
- 4     Index Deferred           @X(Rn)              Value X (stored in a word
+ 7     Index Deferred           @X(Rn)              Value X (stored in a word
                                                     following the instruction)
                                                     and (Rn) are added. The sum
                                                     is then used as a pointer
@@ -415,7 +415,7 @@ use it as the address of the operand.
 1. The current PC is at 005267
 2. The grab the contents of the of PC+2 and add the contents of that to the
    address of address next to PC+2 (essentially just something like PC+2 +2)
-3. The PC is increased by 2
+3. The PC is increased by 4
 
 ### PC as GPR (Relative Deferred Addressing)
 
@@ -512,3 +512,5 @@ x053DD      DEC(B)      Decrement contents of DD   Single Operand
 x054DD      NEG(B)      Negate contents of DD      Single Operand
 x057DD      TST(B)      Test DD                    Single Operand
 ```
+
+
