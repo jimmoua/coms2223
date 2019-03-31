@@ -335,3 +335,34 @@ be the value we increment.
 3. Now increment the contents in 1010, which is 25, to 26
 4. Increment R2's contents by 2 (regardless if it's a word instruction or a
    byte instruction).
+
+### Autodecrement Deferred Mode
+
+Let's consider `COM @-(R0)`, which means
++ Use the contents of the R0 as the address operand and go to it
++ Once there, use the content of R0's content minus 21 as the next address
+  operand
++ Now we get to address that address, complement it as follows
+
+  ```
+  012345                     ; The octal representation
+  000 001 010 011 100 101    ; represent each digit into binary (padded 0)
+  111 110 101 100 011 010    ; invert the bits
+  111 110 101 100 011 010    ; add 1 to MSB (will cause overflow so need carry)
+  000 110 101 100 011 010    ; MSB is set to 000
+  001 110 101 100 011 010    ; add the carry-in to the MSB
+    1   6   5   4   3   2    ; convert to octal again
+  ```
++ Now R0 is decremented by 2 (regardless of whether it's a word instruction or
+  a byte instruction).
+
+![AutoDecDef](./img/autoDecDef.jpg)
+
+### Index Deferred Mode
+
+Consider `ADD @1000((R2),R1`, which translates to:
++ Take the pointer to pointer of R2 and add it 1000
++ Grab that value at that pointer value
++ Add it to R1
+
+![AutoIndDef](./img/autoIndexDef.jpg)
