@@ -1,6 +1,6 @@
-## PDP-11 System Architecture
-
 # PDP-11 Notes
+
+Some notes for the next COMS2223 "quiz".
 
 ## PDP-11 Traits
 
