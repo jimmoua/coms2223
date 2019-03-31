@@ -366,3 +366,37 @@ Consider `ADD @1000((R2),R1`, which translates to:
 + Add it to R1
 
 ![AutoIndDef](./img/autoIndexDef.jpg)
+
+## Using PC (R7) as a GPR
+
+We can also use the PC register as a GPR. When processor uses program counter
+to acquire a word from memory, it is automatically incremented by 2 to contain
+the address of the next word (same with byte) of the instruction being executed
+or address or next instruction.
+
+```
+Mode  Name                 Assembler Syntax      Function
+ 2    Immediate            #n                    Operand follows instruction
+
+ 3    Absolute             @#A                   Absolute address follows
+                                                 instruction
+
+ 6    Relative             A                     Relative address (index value)
+                                                 follows the instruction
+
+ 7    Relative Deferred    @A                    Index valued (stored in word
+                                                 following instruction) is
+                                                 relative address for the
+                                                 address of operand.
+```
+
+### PC as GPR (Immediate Addressing)
+`ADD #10,R0` will add the value 10 to register 0. This one is very easy.
+
+![immediatePC](./img/pcImmediate.jpg)
+
+### PC as GPR (Absolute Addressing)
+
+`CLR @#1000` will clear the contents at memory location 1000.
+
+![immediateAbs](./img/pcAbsolute.jpg)
