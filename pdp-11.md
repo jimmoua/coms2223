@@ -277,7 +277,7 @@ Mode   Name                     Assember Syntax     Function
  1     Register Deferred        @Rn or (Rn)         Register contains the
                                                     address of the operand
 
- 2     Autoincrement Deferred   @(Rn)               Register is first used as a
+ 2     Autoincrement Deferred   @(Rn)+              Register is first used as a
                                                     pointer to a word container
                                                     the address of the operand,
                                                     then incremented by 2, even
@@ -291,11 +291,47 @@ Mode   Name                     Assember Syntax     Function
                                                     the operand.
 
  4     Index Deferred           @X(Rn)              Value X (stored in a word
-                                                    followin the instruction)
-                                                    and (Rn) are added. The usm
+                                                    following the instruction)
+                                                    and (Rn) are added. The sum
                                                     is then used as a pointer
                                                     to a word container the
                                                     address of the operand.
                                                     Neither X nor (Rn) are
                                                     modified.
 ```
+
+**Each deferred mode is very similar to its basic counterpart.**
+
+### Register Deferred Mode
+
+Take the following (from the manual) as an example: `CLR @R5`. This will use
+the contents of register 5 as the address of the operand and clear that
+address. That's all. It's almost the same as the direct address mode
+counterpart, but instead of modifying R5, we use its contents as the address
+operand.
+
+Take for example this PDP-11/40 code.
+```
+start:
+  mov #100,100   ; addr 100 has 100
+  mov #100,r0    ; r0 has value 100
+  clr @(r0)      ; since r0 has 100, clear addr 100 (not r0)
+  mov 100,r0     ; r0 is now 0
+.end start
+```
+
+### Autoincrement Deffered Mode
+
+Consider the following: `INC @(R2)+`
+
+![AutoIncDef](./img/autoIncDef.jpg)
+
+This is similar to a pointer to pointer. We will use the contents of R2 as a
+source operand, **but** whichever value that pointer points to will actually be
+be the value we increment.
+1. R2 contains 10300, so we use 10300 as our address operand.
+2. We get to 10300 and its contents are 1010, so we now use 1010 as our source
+   operand (think pointer to pointer)
+3. Now increment the contents in 1010, which is 25, to 26
+4. Increment R2's contents by 2 (regardless if it's a word instruction or a
+   byte instruction).
