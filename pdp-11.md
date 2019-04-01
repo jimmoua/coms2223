@@ -116,18 +116,26 @@ interrupts.
 
 #### Conditional Codes
 
+Conditional codes describe the results of the previous operation.
+
 The conditional codes are labeled as such:
 **N  Z  V  C**
 
 ```
 N - 1 if last result was negative
 
-Z - 1 if the result was zero.
+Z - 1 if the result (source) was zero.
 
 V - 1 if generated a 2's complement overflow
 
 C - 1 if had to carry from the MSB
 ```
+
+Condition code have the form of `0002XX`.
+
+![conditionCode](./img/conditionCode.jpg)
+
+Bits 0-3 are modified according to the sense of bit 4.
 
 ### Trap Bit
 
@@ -380,7 +388,7 @@ Let's consider `COM @-(R0)`, which means
 ### Index Deferred Mode
 
 Consider `ADD @1000(R2),R1`, which translates to:
-+ Take the address of R2 and add 1000 to it. Use that value as the address
++ Take the contents of R2 and add 1000 to it. Use that value as the address
   operand.
 + Grab that contents at the address operand (which we got from above) and add
   its contents to R1.
@@ -607,3 +615,49 @@ solloing the JSR instruction. (The manual states it "is as if " push to stack
 was performed. There is no explicit definition of what exactly happens.)
 
 ![JSRExample](./img/jsrExample.jpg)
+
+## No Operation Instruction
+
+```
+Bit 0 = C
+Bit 1 = V
+Bit 2 = Z
+Bit 3 = N
+
+CLC (Clear C)
+000241
+  0   0   0   2   4   1
+000 000 000 010 100 001
+
+
+If we look at in in numerical order, the right four bits represent the
+conditional codes.
+
+This clears the bit of the operator
+000 000 000 010 100 001   ; 000241 (Clear C)
+000 000 000 010 100 010   ; 000242 (Clear V)
+000 000 000 010 100 100   ; 000244 (Clear Z)
+000 000 000 010 101 000   ; 000250 (Clear N)
+                 ^ bit four is 0, so we are clearing
+
+As stated by the manual, the fourth bit will represent whether we set or clear
+the conditon codes NZVC (or whichever one the OP Code specifies). Therefore, if
+we wanted to set the bits, we would simply set the bit 4 to 1.
+
+000 000 000 010 110 001   ; 000261 (Set C)
+000 000 000 010 110 010   ; 000262 (Set V)
+000 000 000 010 110 100   ; 000264 (Set Z)
+000 000 000 010 111 000   ; 000270 (Set N)
+                 ^ bit 4 is 1, so we are setting
+
+So, in the NOP operation which is 000240
+
+000 000 000 010 100 000   ; None of the NZVC bits are set to 1, so we aren't
+                          ; modifying anything.
+
+000 000 000 010 110 000   ; But would this also mean that this is also a NOP
+                          ; operation?
+                          ; (000260)
+                          ; Because none of the NZVC bits are set, we are not
+                          ; going to actually do anything...
+```
