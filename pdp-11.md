@@ -37,15 +37,26 @@ digit of the 6-digit octal word.
 
 ```
 MOV   R5,     (R4)             
-0001  000101  001100                In bits
-        ^       ^ indirection bit
-        | indirection bit
+1  000 101  001 100
+     ^       ^ indirection bit
+     | indirection bit
 
 [0] [001] [000] [101] [001] [100]
  0     1     0     5     1     4
 
   which is a 6-digit octal word: 010514
+  or "move contents of register 5 into register 4"
+
+00x - Register
+01x - Auto (post)increment
+10x - Auto (post)decrement
+11x - Indexed
 ```
+
+In the above, we talked about indirection bits. Notice that they are the LSB of
+the grouping of bits. When the indirection bit is 1, the addressing mode is in
+indirection (AKA deferred) mode. The the bit is 0, the addressing mode is
+direct addressing.
 
 ### Converting MISC
 
