@@ -84,8 +84,16 @@ will be of any relevance). This contains the information on the PDP-11/40.
 ![PSW Diagram](./img/psw.jpg)
 
 #### Modes
-Bits 15 and 14 are the current mode (either user or kernel mode). Bits 13 and
-12 represent the previous modes, and bits 11 through 8 aren't used (maybe).
+Bits 15 and 14 are the current mode for the Stack Pointer(either user or kernel
+mode). Bits 13 and 12 represent the previous modes, and bits 11 through 8
+aren't used (maybe).
+
+When the program operates in User Mode, the program isn't allowed to execute a
+"HALT" instruction and the processor will trap through location 10 if an
+attempt is made to execute a "HALT" instruction. 
+
+Programs operating in Kernal mode can map users' programs anywhere in core and
+explicitly protect key areas from User operating environment.
 
 #### Processor Priority
 
@@ -513,4 +521,77 @@ x054DD      NEG(B)      Negate contents of DD      Single Operand
 x057DD      TST(B)      Test DD                    Single Operand
 ```
 
+## Use of Stack Pointer as GPR
 
+Stack pointer (R6) is, in most cases, the general register use when dealing
+with stack operations. Autodecrement with the SP pushed data onto the stack and
+autoincrement with SP pops data off the stack. SP allows for random access of
+items on the stack. It is also used by the processor for interrupt handling.
+It has a special attribute: auto autoincrement and autodecrements are always
+done in steps of two.  Byte operations using the SP in this way leave odd
+addresses unmodified.
+
+With the Memory Management option, there are two SP registers selected by the
+Program Stack, but at any given time, only one is operation.
+
+## Stacks in the PDP-11
+
+A stack in the PDP-11 is a temporary data storage area which allow programs to
+make efficient use of frequently accessed data. It is automatically used by
+program interrupts, subroutine calls, and trap instructions. Stacks in the
+PDP-11 uses the concepts in last-in-first-out.
+
+When the processor is interrupted, the central PSW and the PC are saved (pushed
+onto the stack area) while the processor services the interrupting device. A
+new Status word is then automatically acquired from an area in core memory
+which is reserved for interrupted instructions (vector area). Returns from
+interrupt instruction will restore the original PSW and returns to the
+interrupted program without software intervention.
+
+As mentioned, there exists two Stack Pointer registers in he PDP-11/40 (Kernal
+and User). Refer to the **mode** heading above.
+
+![registers](./img/registers.jpg)
+
+Notice how there is the Kernel Stack Pointer and the User Stack Pointer.
+
+### The Stack Pointer (adding items to stack)
+
+Stacks operate on high-low memory, meaning that it starts from the highest
+location reserved for it and expands linearly downward to the lower addresses
+as items are added onto the stack. The stack pointer will also keep track of
+these items.
+
+![StackDiagramItems](./img/stacksItemsDiagram.jpg)
+
+```
+MOV  SS,~(SP)    ; Moves a souce word onto the stack. This is "pushing" items
+                 ; onto the stack.
+
+MOVB SS,~(SP)    ; Moves a source byte onto the stack. This is "pushing" items
+                 ; onto the stack
+
+MOV  (SP)+,DD    ; Move destination word off the stack. This is "popping" items
+                 ; off of the stack.
+
+MOVB (SP)+,DD    ; Move a destination byte off of the stack.
+```
+
+## Subroutine Linkage
+
+PDP-11 subroutines are called by using the `JSR` instruction and has the
+format:
+
+```
+Rn   = some register that will be used for linkage
+SUBR = an entry location for the subroutine
+
+JSR Rn,SUBR
+```
+
+When JSR is executed, contents of the linkage register's contents are saved
+onto the SP and then the same register is loaded with the memory address
+solloing the JSR instruction. (The manual states it "is as if " push to stack
+was performed. There is no explicit definition of what exactly happens.)
+
+![JSRExample](./img/jsrExample.jpg)
