@@ -379,10 +379,11 @@ Let's consider `COM @-(R0)`, which means
 
 ### Index Deferred Mode
 
-Consider `ADD @1000((R2),R1`, which translates to:
-+ Take the pointer to pointer of R2 and add it 1000
-+ Grab that value at that pointer value
-+ Add it to R1
+Consider `ADD @1000(R2),R1`, which translates to:
++ Take the address of R2 and add 1000 to it. Use that value as the address
+  operand.
++ Grab that contents at the address operand (which we got from above) and add
+  its contents to R1.
 
 ![AutoIndDef](./img/autoIndexDef.jpg)
 
