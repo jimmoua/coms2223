@@ -36,9 +36,9 @@ digit of the 6-digit octal word.
 ```
 
 ```
-MOV   R5,     (R4)             
+MOV    R5,      (R4)             
 1  000 101  001 100
-     ^       ^ indirection bit
+     ^        ^ indirection bit
      | indirection bit
 
 [0] [001] [000] [101] [001] [100]
