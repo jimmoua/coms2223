@@ -40,8 +40,9 @@ Cache memory works through **Content Addressable Memory**.
   If none of the keys respond, data will be brought up to CPU.
   ```
   |  =?     [  KEY (contains address  |     DATA VALUES          ] 
-     v
+     ↓
   |  =?     [  KEY (contains address) |     DATA VALUES          ]
-     v
+     ↓
   |  =?     [  KEY (contains address) |     DATA VALUES          ]
+     ↓
   ```
