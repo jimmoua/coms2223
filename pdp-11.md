@@ -24,6 +24,25 @@ the 11/40 is the one focused on in class)
 The basic order code of the PDP-11 uses both single and double operand address
 instructions.
 
+### Instruction Set Format
+
+```
+()         Contents of
+SS         Source Address
+DD         Destination Address
+loc        Location
+←          Becomes
+↑          Popped from the stack
+↓          Pushed onto the stack
+^          Boolean AND
+v          Boolean OR
+⊻          Exclusive OR
+~          Boolean not
+Reg or R   Register
+B          Byte
+█          0 for word, 1 for byte
+```
+
 ## Octal Representation
 The 16-bit PDP-11 word can be represented as a 6-digit octal word.
 
@@ -615,6 +634,61 @@ solloing the JSR instruction. (The manual states it "is as if " push to stack
 was performed. There is no explicit definition of what exactly happens.)
 
 ![JSRExample](./img/jsrExample.jpg)
+
+The JSR instruction is implemented as follows
+
+```
+When JSR
+(tmp)←(dst)            ; contents of tmp becomes contents of dst
+↓(SP)←reg              ; push the register contents onto the stack
+reg←PC                 ; register address becomes address of the PC
+PC←(tmp)               ; PC points to tmp which essentially points to dst
+
+When RTS
+PC←reg                 ; Address of PC becomes the reg address which was the
+                         previous PC address
+reg←(SP)↑              ; reg address becomes contents of the item pushed off
+                         the stack (what originally had been before the JSR)
+```
+
+### Middleton's Question (from email)
+
+```
+(2) In the PDP-11 document, the JSR instruction is shown to be
+           0   0 0 0   1 0 0   r r r   d d d   d d d 
+    and is implemented as
+		(tmp) <- (dst)
+		v(SP) <- reg
+		reg   <- PC
+		PC    <- (tmp)
+    From browsing through the manual, you can explain why
+    the implementation is not
+		v(SP) <- reg
+		reg   <- PC
+		PC    <- (dst)
+    that is, why the extra time and hardware ('tmp' register)?
+```
+
+Dr. Middleton wants us to explain why the implementation instead is not
+
+```
+↓(SP)←reg              ; push the register address onto the stack
+reg←PC                 ; register points to loc following JSR
+PC←(dst)               ; The program counter now points to the dst
+```
+
+After a few hours of trying to figure this one out, I've finally given up.
+There were times were I thought I had solved it, but I was just shot down by my
+own confusion.
+
+Honestly, I've no idea. If I really think about it, tmp really does seem like
+just a waste of time and hardware since all we do in the end is point the PC to
+tmp (which points to the subroutine destination)... I thought it may have to do
+something with return by subroutine, but in this tmp register isn't mentioned
+at all in the RTS operation.
+
+So what is the meaning of having tmp point to the subroutine destination and
+then having the PC point to tmp?
 
 ## No Operation Instruction
 
