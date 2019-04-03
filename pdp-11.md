@@ -630,7 +630,7 @@ JSR Rn,SUBR
 
 When JSR is executed, contents of the linkage register's contents are saved
 onto the SP and then the same register is loaded with the memory address
-solloing the JSR instruction. (The manual states it "is as if " push to stack
+folloing the JSR instruction. (The manual states it "is as if " push to stack
 was performed. There is no explicit definition of what exactly happens.)
 
 ![JSRExample](./img/jsrExample.jpg)
@@ -735,3 +735,20 @@ So, in the NOP operation which is 000240
                           ; Because none of the NZVC bits are set, we are not
                           ; going to actually do anything...
 ```
+
+## Branching
+
+The instruction causes a branch to a location defined by the sum of the offset
+(multiplied by 2) and the current cotents of the PC **IF**:
++ The branch instruction is unconditional
++ It is conditional and the conditions are met after testing condition codes
+  (from the PSW)
+
+The offset is the number of words from the current contents of the PC. Although
+PC expresses a byte address, the offset is expressed in words.
+
+8-bit offset allows branching in the backward direction by 200 words (400
+bytes) from the current PC and in the forward direction by 177 words (376
+bytes) from the current PC.
+
+![Branching](./img/branch.jpg)
