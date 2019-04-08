@@ -266,9 +266,9 @@ R2 = %2
 
 #### Register Mode Examples
 ```
-INC   R3       ; Add one to the contents of the general register 3
+INC   R3       ; Add one to the register 3
 ADD   R2,R4    ; Add contents of R2 to R4, but do not change R2
-COMB  R4       ; Complement byte of R4 (idk how this works)
+COMB  R4       ; Complement byte of R4
 ```
 
 ### Auto Increment Mode
