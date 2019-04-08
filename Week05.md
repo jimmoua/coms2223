@@ -55,7 +55,7 @@ Assembly language programs are just a bunch of line with the following forms:
 If no label, there is at least 1 space in the label field. The operands
 (something that can be manipulated) usually respond in what is appropriate for
 the op-code. The comment field usually has some special character for it (for
-x86 ASM, it's a semicolon).
+x86 ASM, it's a semicolon - actually it's for a bunch of ASM languages).
 
 
 ### Pseudo-Operations
@@ -129,23 +129,29 @@ last are the indirection bits.
 Bits left of indirection bit:
 
 ```
-00 - Register
-01 - Auto (post)increment
-10 - Auto (post)decrement
-11 - Indexed
+00x - Register
+01x - Auto (post)increment
+10x - Auto (post)decrement
+11x - Indexed
 ```
+
+If x = 0, we are doing direct addressing mode
+   x = 1, we are doing deferred addressing mode
 
 **Indirection Example 1**
 
 ```
 MOV   R5,     (R4)             
 0001  000101  001100                In bits
-        ^       ^ indirection bit
-        | indirection bit
+       ^^      ^^ indirection bit
+       || indirection bit
+
+MSB on indirection bits is set if deferred (indirect). Otherwise 0 = direct.
 
 0|001|000|101|001|100
   becomes...
     010514   In Octal
+
 ```
 
 Move R5 into R4. This is a 16-bit instruction, so the value in R4 has to be
