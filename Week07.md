@@ -1,5 +1,7 @@
 # Wed Mar 6 2019
+
 Just went over assembly code. PC (program counters) are in octal
+
 ```
 PC
 00
@@ -80,9 +82,10 @@ Control flow sequences: need to be careful with the flow of things...
 
 JSR (for PDP-11)
 ```
-v(SP) <- reg        ; into stack?
-reg   <- PC
-PC    <- (dest)
+0 000 100 sss ddd ddd
+v(SP) <- reg        ; the address of the register is pushed into stack
+reg   <- PC         ; The PC that holds the loc follow JSR is put into reg
+PC    <- (dest)     ; Take the SR destination and put it into the PC
 ```
 
 RTS
